@@ -1,0 +1,63 @@
+Setting up mod_wsgi on Mac running python 2.6 with Django 1.4.1
+
+##NOTE:
+Before you start the process below be sure that your directories and subdirectories aren't named the same.
+In Django 1.4.1, when you start a project with "django-admin.py startproject example_site" it creates the
+following file structure - where/your/django/code/resides/exmaple_site/example_site/...
+
+To get mod_wsgi working I had to rename it to ../projects/example_site/...
+
+##DOWNLOAD AND SETUP http.conf
+- Download the mod_wsgi.so file from http://code.google.com/p/modwsgi/downloads/list
+- Copy the file to /usr/libexec/apache2
+- In /etc/apache/httpd.conf add "LoadModule wsgi_module     libexec/apache2/mod_wsgi.so"
+
+##USING A VHOST
+- In etc/hosts create an entry for your vhost (I created one for 'dev.python.com' at 127.0.0.1)
+- In /private/etc/apache2/extra/httpd-vhosts.conf, I created a virtual host -
+
+<VirtualHost *:80>
+    DocumentRoot "/Users/kenny.chan/Sites/py_fwk/projects/mysite"
+    WSGIDaemonProcess dev.python.com python-path=/Users/kenny.chan/Site/py_fwk/projects python-eggs=/Users/kenny.chan/Site/py_fwk/projects/mysite/eggs
+    WSGIProcessGroup dev.python.com
+    WSGIScriptAlias / /Users/kenny.chan/Sites/py_fwk/projects/mysite/mod.wsgi
+    ServerName dev.python.com
+    <Directory "/Users/kenny.chan/Sites/py_fwk/projects/mysite">
+      AllowOverride All
+      Order allow,deny
+      Allow from all
+    </Directory>
+</VirtualHost>
+
+- Note the "WSGIScriptAlias / /Users/kenny.chan/Sites/py_fwk/projects/mysite/mod.wsgi" - create the mod.wsgi file.  The first "/" after WSGIScriptAlias
+basically says that the mod.wsgi applies to the base directory
+- You can actually setup different wsgi files for different URLs
+Ex. WSGIScriptAlias /blogs /Users/kenny.chan/Sites/py_fwk/projects/mysite/blogs.wsgi
+- I'm setting WSGI to run as a daemon using WSGIDaemonProcess...
+- I'm not sure what WSGIProcessGroup does.
+
+
+##CREATING THE WSGI file (for my case mod.wsgi)
+- add the following into the mod.wsgi
+
+##START OF mod.wsgi
+
+import os, sys
+sys.path.append('/Users/kenny.chan/Sites/py_fwk/projects')
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+os.environ['PYTHON_EGG_CACHE'] = '/Users/kenny.chan/Sites/py_fwk/projects/mysite/eggs'
+
+import django.core.handlers.wsgi
+
+application = django.core.handlers.wsgi.WSGIHandler()
+
+##END OF mod.wsgi
+
+- You need to state the absolute path to your projects foldder.  When Django runs you can't really tell where the Apace user
+is running the code from so you can't use relative paths. I kept getting an error saying it couldn't find my settings file
+because I was using a relative path.
+
+- Set the DJANGO_SETTINGS_MODULE
+- Set the PYTHON_EGG_CACHE - this dir needs to be already created and have write permissions
+
+- Remember to restart Apache
