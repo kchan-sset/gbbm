@@ -1,0 +1,19 @@
+##ASSUMES YOU HAVE AN EXISTING MYSQL DB
+
+- We need to have Django sync up the legacy database
+
+- Create Django app (gbbm/good_beer/good_beer/) called bad_movie
+----command = 'python manage.py startapp bad_movie'
+
+- cd into bad_movie
+
+- run command  = 'python ../../manage.py inspectdb > models.py'
+
+- you may need to clean up the models.py (e.g change max_length value to 255)
+
+- you may need to rearrange the classes in the correct order
+
+- in your settings.py be sure to include the new app (bad_movie) to your
+----'INSTALLED_APPS' setting
+
+- run '../../python manage.py syncdb'
