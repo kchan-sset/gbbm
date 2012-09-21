@@ -6,3 +6,6 @@ os.environ['PYTHON_EGG_CACHE'] = '/Users/kenny.chan/Sites/py_fwk/projects/mysite
 import django.core.handlers.wsgi
 
 application = django.core.handlers.wsgi.WSGIHandler()
+
+import good_beer.monitor
+good_beer.monitor.start(interval=1.0)
