@@ -6,7 +6,7 @@
 #
 # Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
 # into your database.
-
+from django.utils.encoding import smart_str
 from django.db import models
 
 class User(models.Model):
@@ -23,6 +23,9 @@ class User(models.Model):
     updated_at = models.DateTimeField(null=True, blank=True)
     class Meta:
         db_table = u'user'
+    def __str__(self):
+        #print out the username in the admin whenever there's a relationship in the admin
+        return "%s" % (self.username)
 
 class Style(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -33,6 +36,8 @@ class Style(models.Model):
     image = models.CharField(max_length=255, blank=True)
     class Meta:
         db_table = u'style'
+    def __str__(self):
+        return "%s" % (self.style)
 
 class Brewery(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -43,6 +48,8 @@ class Brewery(models.Model):
     image = models.CharField(max_length=255, blank=True)
     class Meta:
         db_table = u'brewery'
+    def __str__(self):
+        return "%s" % (smart_str(self.name))
 
 class Beer(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -59,6 +66,8 @@ class Beer(models.Model):
     ibu = models.CharField(max_length=255, blank=True)
     class Meta:
         db_table = u'beer'
+        verbose_name = 'Beer Record'
+        verbose_name_plural = 'Beers'
 
 class Movie(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -76,6 +85,8 @@ class Movie(models.Model):
     updated_at = models.DateTimeField(null=True, blank=True)
     class Meta:
         db_table = u'movie'
+    def __str__(self):
+        return "%s" % (self.title)
 
 class FeaturedPair(models.Model):
     id = models.BigIntegerField(primary_key=True)

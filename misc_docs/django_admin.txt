@@ -1,0 +1,74 @@
+***SETTING UP DJANGO ADMIN***
+
+In gbbm/good_beer/good_beer/settings.py uncomment the following lines from the INSTALLED_APPS section
+    django.contrib.admin
+    django.contrib.admindocs
+    
+    
+In gbbm/good_beer/good_beer/urls.py uncomment out
+    from django.contrib import admin
+    admin.autodiscover()
+    
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    
+***CREATE A SUPERUSER***
+You will need to create a super user using "python manage.py createsuperuser"
+
+
+***FIXING CSS ISSUES***
+If there's no css for the admin you will need to set up an alias in your http-vhost.conf
+
+    Alias /gbbm_static/ /Users/kenny.chan/Sites/py_fwk/gbbm/good_beer/good_beer/static/
+    
+In the directory gbbm/good_beer/good_beer/static/, symlink create a symlink to path/to/django/contrib/admin/static/admin
+
+In gbbm/good_beer/good_beer/settings.py, set STATIC_URL to the alias you created (in this case /gbbm_static/)
+
+ADMIN_MEDIA_PREFIX has been deprecated in django 1.4
+
+
+***ATTACHING MODELS TO THE ADMIN***
+Create an 'admin.py' in your app root director and enter similar code
+
+    #BEGIN SAMPLE CODE
+    
+    from django.contrib import admin
+    from good_beer.bad_movie import models
+    
+    class UserAdmin(admin.ModelAdmin):
+        list_display = ['username', 'email']
+        
+    class BeerAdmin(admin.ModelAdmin):
+        list_display = ['label', 'style', 'brewery', 'rating']
+
+    #REGISTER EACH CLASS        
+    admin.site.register(models.User, UserAdmin)    
+    admin.site.register(models.Beer, BeerAdmin)
+    
+    #END SAMPLE CODE
+    
+Within the admin, if you have a relationship between two models, it will show a string represenation of the model.
+To display something more useful, add the following code in the models.py
+
+    #BEGIN SAMPLE CODE
+    
+    class User(models.Model):
+        id = models.BigIntegerField(primary_key=True)
+        username = models.CharField(max_length=255, unique=True)
+        password = models.CharField(max_length=255)
+        role = models.CharField(max_length=255)
+        email = models.CharField(max_length=255)
+        token = models.CharField(max_length=96, blank=True)
+        nftoken = models.CharField(max_length=255, blank=True)
+        nfsecret = models.CharField(max_length=255, blank=True)
+        nfauth = models.IntegerField()
+        created_at = models.DateTimeField(null=True, blank=True)
+        updated_at = models.DateTimeField(null=True, blank=True)
+        class Meta:
+            db_table = u'user'
+        def __str__(self):
+            #print out the username in the admin whenever there's a relationship in the admin
+            return "%s" % (self.username)
+            
+    #END SAMPLE CODE

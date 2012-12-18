@@ -5,7 +5,7 @@ import random
 
 def index(request):
     picker = Randomizer()
-    results = picker.methodDefault()
+    results = picker.pickOne()
     t = loader.get_template('paired.html')
     c = Context({ 'beer':results.beerObj, 'movie':results.movieObj})
     

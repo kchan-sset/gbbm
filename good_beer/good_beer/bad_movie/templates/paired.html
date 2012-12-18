@@ -1,4 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
+    <span id='beer'>
+        <ul id="beerData">
+            <li>Label: {{beer.label}}</li>
+            <li>Style: {{beer.style.style}}</li>
+            <li>Brewery: {{beer.brewery.name}} ({{beer.brewery.country}})</li>
+        </ul>
+    </span>
+    
+    <span id='movie'>
+        <ul id="movieData">
+            <li>Title: {{movie.title}} ({{movie.runtime}})</li>
+            <li>Released: {{movie.year}}</li>
+            <li>Rating: {{movie.rating}}</li>
+        </ul>
+    </span>
 <h2>Beer: {{beer.label}} - Movie: {{movie.title}}</h2>
 {% endblock%}
