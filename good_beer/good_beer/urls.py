@@ -5,8 +5,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-     url(r'^$', include('good_beer.bad_movie.urls')),
+    # Examples:     
+     url(r'^', include('good_beer.bad_movie.urls')),
      #url(r'^good_beer/', include('good_beer.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

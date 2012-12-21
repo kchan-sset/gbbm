@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Create a new user</h2>
+    <p></p>
+    <form action='/accounts/register/' method='post'>
+        {% csrf_token %}
+        {% include 'common/form_snippet.html' with form=regForm %}
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock%}

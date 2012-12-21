@@ -1,7 +1,11 @@
 from django.contrib import admin
 from good_beer.bad_movie import models
 
+class UserProfileAdmin(admin.StackedInline):
+    model = models.UserProfile
+    
 class UserAdmin(admin.ModelAdmin):
+    inlines = (UserProfileAdmin, )
     list_display = ['username', 'email']
     
 class BeerAdmin(admin.ModelAdmin):
@@ -19,6 +23,7 @@ class MovieAdmin(admin.ModelAdmin):
 class GenreAdmin(admin.ModelAdmin):
     list_display = ['movie', 'genre']
     
+admin.site.unregister(models.User)    
 admin.site.register(models.User, UserAdmin)    
 admin.site.register(models.Beer, BeerAdmin)
 admin.site.register(models.Style, StyleAdmin)

@@ -8,24 +8,45 @@
 # into your database.
 from django.utils.encoding import smart_str
 from django.db import models
+from django.forms import ModelForm, Textarea
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
-class User(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    username = models.CharField(max_length=255, unique=True)
-    password = models.CharField(max_length=255)
-    role = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+
     token = models.CharField(max_length=96, blank=True)
     nftoken = models.CharField(max_length=255, blank=True)
     nfsecret = models.CharField(max_length=255, blank=True)
     nfauth = models.IntegerField()
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
+    activation_key = models.CharField(max_length=40)
+    key_expires = models.DateTimeField()
     class Meta:
-        db_table = u'user'
+        db_table = u'user_profile'
     def __str__(self):
         #print out the username in the admin whenever there's a relationship in the admin
         return "%s" % (self.username)
+    
+
+#class User(models.Model):
+#    id = models.BigIntegerField(primary_key=True)
+#    username = models.CharField(max_length=255, unique=True)
+#    password = models.CharField(max_length=255)
+#    role = models.CharField(max_length=255)
+#    email = models.CharField(max_length=255)
+#    token = models.CharField(max_length=96, blank=True)
+#    nftoken = models.CharField(max_length=255, blank=True)
+#    nfsecret = models.CharField(max_length=255, blank=True)
+#    nfauth = models.IntegerField()
+#    created_at = models.DateTimeField(null=True, blank=True)
+#    updated_at = models.DateTimeField(null=True, blank=True)
+#    class Meta:
+#        db_table = u'user'
+#    def __str__(self):
+#        #print out the username in the admin whenever there's a relationship in the admin
+#        return "%s" % (self.username)
 
 class Style(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -115,3 +136,19 @@ class Session(models.Model):
     sess_time = models.IntegerField()
     class Meta:
         db_table = u'session'
+        
+##FORM CREATION CLASSESS
+class MovieForm(ModelForm):
+    class Meta:
+        model = Movie
+        fields = ('title', 'rating', 'year', 'runtime', 'synopsis', 'image')
+        widgets = {
+            'synopsis': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
+        
+#creating a signal/handle to create an associated user profile
+def create_user_profile(sender, instance, created, **kwargs):  
+    if created:  
+       profile, created = UserProfile.objects.get_or_create(user=instance)  
+
+post_save.connect(create_user_profile, sender=User) 
