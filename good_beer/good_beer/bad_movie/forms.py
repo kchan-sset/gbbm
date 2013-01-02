@@ -2,6 +2,9 @@ from django import forms
 from django.core import validators
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.db.models.signals import post_save
+
+from good_beer.bad_movie.models import create_user_profile
 
 class RegForm(forms.ModelForm):
     #CREATING CUSTOMIZED FORM FIELDS
@@ -27,7 +30,7 @@ class RegForm(forms.ModelForm):
         #SETTING THE ORDER OF FORM FIELDS
         #DON'T NEED TO put the password fields since they will be
         #appended to the end of the fields list
-        fields = ('username', 'first_name', 'last_name', 'email')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
         
     #validating the fields by calling clean_<fieldname>    
     def clean_username(self):
@@ -48,14 +51,10 @@ class RegForm(forms.ModelForm):
         
         return pw2
             
-    
-    def save(self, new_data):
-        u = User.objects.create_user(
-            new_data['username'],
-            new_data['email'],
-            new_data['password1']
-        )
+    def save(self):
+        user = super(RegForm, self).save(commit=False)
+        user.set_password(self.cleaned_data['password1'])
+        user.save()
         
-        u.is_active = False
-        u.save()
-        return u
+        return user
+        

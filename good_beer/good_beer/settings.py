@@ -150,3 +150,5 @@ LOGGING = {
         },
     }
 }
+
+AUTH_PROFILE_MODULE = 'bad_movie.UserProfile'
