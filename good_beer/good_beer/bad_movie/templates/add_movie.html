@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Add a New Movie</h2>
+    <p></p>
+    <form action='/add-movie/' method='post'>
+        {% csrf_token %}
+        {% include 'common/form_snippet.html' with form=movieForm %}
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock%}
