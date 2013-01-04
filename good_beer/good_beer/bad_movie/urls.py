@@ -5,10 +5,10 @@ from good_beer.bad_movie.beer import *
 from good_beer.bad_movie.user_views import *
 
 
-urlpatterns = patterns('good_beer.bad_movie.gbbm_views.index',
+urlpatterns = patterns('',
     url(r'^$', index),
     url(r'^add-movie/$', addMovie),
     url(r'^add-beer/$', addBeer),
     url(r'^accounts/register/$', registerUser),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'myapp/login.html'}),
+    url(r'^accounts/login/$', logInUser),
 )

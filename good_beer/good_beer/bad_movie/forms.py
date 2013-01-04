@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 
 from good_beer.bad_movie.models import create_user_profile
 
-class RegForm(forms.ModelForm):
+class regForm(forms.ModelForm):
     #CREATING CUSTOMIZED FORM FIELDS
     username = forms.CharField(max_length=30)
     password1 = forms.CharField(
@@ -57,4 +57,18 @@ class RegForm(forms.ModelForm):
         user.save()
         
         return user
-        
+    
+class loginForm(forms.ModelForm):
+    username = forms.CharField(max_length=30)
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'placeholder': 'Password'}
+            ),
+        label='Password',
+        required=True
+    )
+    
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
