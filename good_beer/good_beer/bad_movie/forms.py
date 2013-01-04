@@ -4,9 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.db.models.signals import post_save
 
-from good_beer.bad_movie.models import create_user_profile
-
-class regForm(forms.ModelForm):
+class RegForm(forms.ModelForm):
     #CREATING CUSTOMIZED FORM FIELDS
     username = forms.CharField(max_length=30)
     password1 = forms.CharField(
@@ -58,7 +56,7 @@ class regForm(forms.ModelForm):
         
         return user
     
-class loginForm(forms.ModelForm):
+class LoginForm(forms.ModelForm):
     username = forms.CharField(max_length=30)
     password = forms.CharField(
         widget=forms.PasswordInput(

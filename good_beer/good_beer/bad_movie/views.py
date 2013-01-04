@@ -4,12 +4,10 @@ from good_beer.bad_movie.randomizer import Randomizer
 import random
 
 def index(request):
-    if request.user.is_authenticated():
-        return HttpResponse('user logged in')
     
     picker = Randomizer()
     results = picker.pickOne()
     t = loader.get_template('paired.html')
-    c = Context({ 'beer':results.beerObj, 'movie':results.movieObj})
+    c = Context({ 'beer':results.beerObj, 'movie':results.movieObj, 'user':request.user})
     
     return HttpResponse(t.render(c))

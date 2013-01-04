@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>{{form_title}}</h2>
+    <p></p>
+    <form action='/accounts/login/' method='POST'>
+        {{ formToUse.non_field_errors }}
+        {% csrf_token %}
+        {% include 'common/form_snippet.html' with form=formToUse %}
+        <input type='hidden' name='referer' value='{{referer}}'/>
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock%}
