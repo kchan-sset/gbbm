@@ -9,7 +9,7 @@ a { color: #bf8;}
 <body>
 <h1>Good Beer; Bad Movie</h1>
 {% if user.is_authenticated %}
-    {{user.username}} - <a href="/accounts/logout">Logout</a>
+    <a href="/accounts/profile/{{user.username}}">{{user.username}}</a> - <a href="/accounts/logout">Logout</a>
 {% else%}
     <a href="/accounts/login/">Login</a>
 {%endif%}
